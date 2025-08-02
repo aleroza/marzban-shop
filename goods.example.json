@@ -2,6 +2,7 @@
     {
         "title": "Simple VPN",
         "price": {
+            "free": true,
             "en": 1,
             "ru": 100
         },

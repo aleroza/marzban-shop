@@ -7,12 +7,16 @@ from utils import goods
 def get_buy_menu_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     for good in goods.get():
-        builder.row(InlineKeyboardButton(
-            text=_("{title} - {price_ru}₽").format(
-                title=good['title'],
-                price_en=good['price']['en'],
-                price_ru=good['price']['ru']
-                ), 
-            callback_data=good['callback'])
+        is_free = good['price'].get('free', False)
+        price_text = _("FREE") if is_free else "{price_ru}₽".format(price_ru=good['price']['ru'])
+
+        builder.row(
+            InlineKeyboardButton(
+                text=_("{title} - {price}").format(
+                    title=good['title'],
+                    price=price_text
+                ),
+                callback_data=good['callback']
+            )
         )
     return builder.as_markup()

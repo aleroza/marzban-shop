@@ -52,10 +52,26 @@ async def callback_payment_method_select(callback: CallbackQuery):
         reply_markup=get_pay_keyboard(result['url']))
     await callback.answer()
 
+@router.callback_query(F.data.startswith("pay_free_"))
+async def callback_payment_method_select(callback: CallbackQuery):
+    await callback.message.delete()
+    data = callback.data.replace("pay_free_", "")
+    if data not in goods.get_callbacks():
+        await callback.answer()
+        return
+    # result = true
+    # await callback.message.answer(
+    #     _("To be paid - {amount}₽ ⬇️").format(
+    #         amount=result['amount']
+    #     ),
+    #     reply_markup=get_pay_keyboard(result['url']))
+    await callback.answer()
+
 @router.callback_query(lambda c: c.data in goods.get_callbacks())
 async def callback_payment_method_select(callback: CallbackQuery):
     await callback.message.delete()
     good = goods.get(callback.data)
+    # await callback.message.answer(text=_(f"{good}"), reply_markup=get_payment_keyboard(good))
     await callback.message.answer(text=_("Select payment method ⬇️"), reply_markup=get_payment_keyboard(good))
     await callback.answer()
 
